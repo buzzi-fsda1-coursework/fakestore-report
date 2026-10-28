@@ -1,8 +1,15 @@
-import type { Cart, Product, ProductEntry } from "./types.ts"
+import type { Cart, CustomerEntry, Product, ProductEntry, User } from "./types.ts"
 
 type ProductSales = {
   product: Product
   units: number
+}
+
+type CustomerSpending = {
+  userId: number
+  orderCount: number
+  itemsPurchased: number
+  totalSpent: number
 }
 
 function round2(value: number): number {
@@ -17,6 +24,16 @@ export function buildProductIndex(products: Product[]): Map<number, Product> {
   }
 
   return productsById
+}
+
+export function buildUserIndex(users: User[]): Map<number, User> {
+  const usersById = new Map<number, User>()
+
+  for (const user of users) {
+    usersById.set(user.id, user)
+  }
+
+  return usersById
 }
 
 function aggregateProducts(carts: Cart[], productsById: Map<number, Product>): ProductSales[] {
@@ -65,6 +82,69 @@ function rankProducts(sales: ProductSales[]): ProductEntry[] {
     }))
 }
 
+function aggregateCustomers(carts: Cart[], productsById: Map<number, Product>): CustomerSpending[] {
+  const spendingById = new Map<number, CustomerSpending>()
+
+  for (const cart of carts) {
+    let entry = spendingById.get(cart.userId)
+
+    if (!entry) {
+      entry = {
+        userId: cart.userId,
+        orderCount: 0,
+        itemsPurchased: 0,
+        totalSpent: 0,
+      }
+      spendingById.set(cart.userId, entry)
+    }
+
+    // il carrello è un ordine anche se alcune sue righe verranno ignorate
+    entry.orderCount += 1
+
+    for (const item of cart.products) {
+      const product = productsById.get(item.productId)
+
+      if (!product) {
+        console.warn(`Prodotto ${item.productId} assente dal catalogo (carrello ${cart.id}): riga ignorata`)
+        continue
+      }
+
+      entry.itemsPurchased += item.quantity
+      entry.totalSpent += product.price * item.quantity
+    }
+  }
+
+  return [...spendingById.values()]
+}
+
+function rankCustomers(spending: CustomerSpending[], usersById: Map<number, User>): CustomerEntry[] {
+  return [...spending]
+    .sort((a, b) => b.totalSpent - a.totalSpent || a.userId - b.userId)
+    .slice(0, 3)
+    .map((entry, index) => {
+      const user = usersById.get(entry.userId)
+
+      return {
+        rank: index + 1,
+        userId: entry.userId,
+        username: user?.username ?? null,
+        fullName: user ? `${user.name.firstname} ${user.name.lastname}` : null,
+        email: user?.email ?? null,
+        orderCount: entry.orderCount,
+        itemsPurchased: entry.itemsPurchased,
+        totalSpent: round2(entry.totalSpent),
+      }
+    })
+}
+
 export function getTopProducts(carts: Cart[], productsById: Map<number, Product>): ProductEntry[] {
   return rankProducts(aggregateProducts(carts, productsById))
+}
+
+export function getTopCustomers(
+  carts: Cart[],
+  productsById: Map<number, Product>,
+  usersById: Map<number, User>,
+): CustomerEntry[] {
+  return rankCustomers(aggregateCustomers(carts, productsById), usersById)
 }

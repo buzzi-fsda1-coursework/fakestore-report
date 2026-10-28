@@ -42,3 +42,14 @@ export type ProductEntry = {
   unitsSold: number
   revenue: number
 }
+
+export type CustomerEntry = {
+  rank: number
+  userId: number
+  username: string | null
+  fullName: string | null
+  email: string | null
+  orderCount: number
+  itemsPurchased: number
+  totalSpent: number
+}
