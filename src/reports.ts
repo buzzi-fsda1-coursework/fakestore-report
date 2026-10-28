@@ -1,4 +1,4 @@
-import type { Cart, CustomerEntry, DateRange, Product, ProductEntry, User } from "./types.ts"
+import type { Cart, CustomerEntry, DateRange, Product, ProductEntry, Report, User } from "./types.ts"
 
 type ProductSales = {
   product: Product
@@ -28,7 +28,7 @@ export function indexById<T extends { id: number }>(items: T[]): Map<number, T> 
   return index
 }
 
-export function getAnchor(carts: Cart[]): number {
+function getAnchor(carts: Cart[]): number {
   if (carts.length === 0) {
     throw new Error("Nessun carrello nei dati: impossibile determinare la data di ancoraggio")
   }
@@ -36,14 +36,14 @@ export function getAnchor(carts: Cart[]): number {
   return Math.max(...carts.map((cart) => Date.parse(cart.date)))
 }
 
-export function getLastMonthRange(anchor: number): DateRange {
+function getLastMonthRange(anchor: number): DateRange {
   return {
     start: new Date(anchor - 30 * DAY_MS).toISOString(),
     end: new Date(anchor).toISOString(),
   }
 }
 
-export function filterByRange(carts: Cart[], range: DateRange): Cart[] {
+function filterByRange(carts: Cart[], range: DateRange): Cart[] {
   const start = Date.parse(range.start)
   const end = Date.parse(range.end)
 
@@ -154,14 +154,49 @@ function rankCustomers(spending: CustomerSpending[], usersById: Map<number, User
     })
 }
 
-export function getTopProducts(carts: Cart[], productsById: Map<number, Product>): ProductEntry[] {
+function getTopProducts(carts: Cart[], productsById: Map<number, Product>): ProductEntry[] {
   return rankProducts(aggregateProducts(carts, productsById))
 }
 
-export function getTopCustomers(
+function getTopCustomers(
   carts: Cart[],
   productsById: Map<number, Product>,
   usersById: Map<number, User>,
 ): CustomerEntry[] {
   return rankCustomers(aggregateCustomers(carts, productsById), usersById)
+}
+
+function buildReport<T>(
+  report: Report<T>["report"],
+  carts: Cart[],
+  rank: (carts: Cart[]) => T[],
+): Report<T> {
+  const anchor = getAnchor(carts)
+  const range = getLastMonthRange(anchor)
+
+  return {
+    report,
+    generatedAt: new Date().toISOString(),
+    anchorDate: new Date(anchor).toISOString(),
+    allTime: {
+      range: null,
+      ranking: rank(carts),
+    },
+    lastMonth: {
+      range,
+      ranking: rank(filterByRange(carts, range)),
+    },
+  }
+}
+
+export function buildProductsReport(carts: Cart[], productsById: Map<number, Product>): Report<ProductEntry> {
+  return buildReport("top-products", carts, (periodCarts) => getTopProducts(periodCarts, productsById))
+}
+
+export function buildCustomersReport(
+  carts: Cart[],
+  productsById: Map<number, Product>,
+  usersById: Map<number, User>,
+): Report<CustomerEntry> {
+  return buildReport("top-customers", carts, (periodCarts) => getTopCustomers(periodCarts, productsById, usersById))
 }

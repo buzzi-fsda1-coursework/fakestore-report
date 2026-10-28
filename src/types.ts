@@ -58,3 +58,16 @@ export type DateRange = {
   start: string
   end: string
 }
+
+export type Period<T> = {
+  range: DateRange | null
+  ranking: T[]
+}
+
+export type Report<T> = {
+  report: "top-products" | "top-customers"
+  generatedAt: string
+  anchorDate: string
+  allTime: Period<T>
+  lastMonth: Period<T>
+}
