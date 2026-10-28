@@ -16,24 +16,14 @@ function round2(value: number): number {
   return Math.round(value * 100) / 100
 }
 
-export function buildProductIndex(products: Product[]): Map<number, Product> {
-  const productsById = new Map<number, Product>()
+export function indexById<T extends { id: number }>(items: T[]): Map<number, T> {
+  const index = new Map<number, T>()
 
-  for (const product of products) {
-    productsById.set(product.id, product)
+  for (const item of items) {
+    index.set(item.id, item)
   }
 
-  return productsById
-}
-
-export function buildUserIndex(users: User[]): Map<number, User> {
-  const usersById = new Map<number, User>()
-
-  for (const user of users) {
-    usersById.set(user.id, user)
-  }
-
-  return usersById
+  return index
 }
 
 function aggregateProducts(carts: Cart[], productsById: Map<number, Product>): ProductSales[] {

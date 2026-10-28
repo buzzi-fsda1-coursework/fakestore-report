@@ -1,10 +1,10 @@
 import { fetchAll } from "./api.ts"
-import { buildProductIndex, buildUserIndex, getTopCustomers, getTopProducts } from "./reports.ts"
+import { getTopCustomers, getTopProducts, indexById } from "./reports.ts"
 
 const { products, carts, users } = await fetchAll()
 
-const productsById = buildProductIndex(products)
-const usersById = buildUserIndex(users)
+const productsById = indexById(products)
+const usersById = indexById(users)
 
 const topProducts = getTopProducts(carts, productsById)
 const topCustomers = getTopCustomers(carts, productsById, usersById)
