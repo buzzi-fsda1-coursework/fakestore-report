@@ -5,6 +5,10 @@ type ProductSales = {
   units: number
 }
 
+function round2(value: number): number {
+  return Math.round(value * 100) / 100
+}
+
 export function buildProductIndex(products: Product[]): Map<number, Product> {
   const productsById = new Map<number, Product>()
 
@@ -53,7 +57,12 @@ function rankProducts(sales: ProductSales[]): ProductEntry[] {
     }))
     .sort((a, b) => b.unitsSold - a.unitsSold || b.revenue - a.revenue || a.productId - b.productId)
     .slice(0, 3)
-    .map((entry, index) => ({ rank: index + 1, ...entry }))
+    // si arrotonda solo qui: ordinamento e confronti usano i valori pieni
+    .map((entry, index) => ({
+      rank: index + 1,
+      ...entry,
+      revenue: round2(entry.revenue),
+    }))
 }
 
 export function getTopProducts(carts: Cart[], productsById: Map<number, Product>): ProductEntry[] {
