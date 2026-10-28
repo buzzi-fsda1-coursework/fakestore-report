@@ -1,54 +1,10 @@
 import { fetchAll } from "./api.ts"
-import type { Product } from "./types.ts"
-
-type ProductSales = {
-  product: Product
-  units: number
-}
+import { buildProductIndex, getTopProducts } from "./reports.ts"
 
 const { products, carts, users } = await fetchAll()
 
-const productsById = new Map<number, Product>()
-
-for (const product of products) {
-  productsById.set(product.id, product)
-}
-
-const salesById = new Map<number, ProductSales>()
-
-for (const cart of carts) {
-  for (const item of cart.products) {
-    const product = productsById.get(item.productId)
-
-    if (!product) {
-      console.warn(`Prodotto ${item.productId} assente dal catalogo (carrello ${cart.id}): riga ignorata`)
-      continue
-    }
-
-    const entry = salesById.get(product.id)
-
-    if (entry) {
-      entry.units += item.quantity
-    } else {
-      salesById.set(product.id, { product, units: item.quantity })
-    }
-  }
-}
-
-const sales = [...salesById.values()].map(({ product, units }) => ({
-  id: product.id,
-  title: product.title,
-  category: product.category,
-  price: product.price,
-  unitsSold: units,
-  // una sola moltiplicazione sul totale, invece di sommare prezzo × quantità riga per riga
-  revenue: product.price * units,
-}))
-
-const topProducts = [...sales]
-  .sort((a, b) => b.unitsSold - a.unitsSold || b.revenue - a.revenue || a.id - b.id)
-  .slice(0, 3)
-  .map((sale, index) => ({ rank: index + 1, ...sale }))
+const productsById = buildProductIndex(products)
+const topProducts = getTopProducts(carts, productsById)
 
 console.table(topProducts)
 console.log("utenti", users)

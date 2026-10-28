@@ -32,3 +32,13 @@ export type StoreData = {
   carts: Cart[]
   users: User[]
 }
+
+export type ProductEntry = {
+  rank: number
+  productId: number
+  title: string
+  category: string
+  unitPrice: number
+  unitsSold: number
+  revenue: number
+}
