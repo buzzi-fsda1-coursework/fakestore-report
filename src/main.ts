@@ -5,14 +5,46 @@ type Product = {
   category: string
 }
 
-const url = "https://fakestoreapi.com/products"
-
-const response = await fetch(url)
-
-if (!response.ok) {
-  throw new Error(`Richiesta fallita: ${response.status} ${url}`)
+type CartItem = {
+  productId: number
+  quantity: number
 }
 
-const products = (await response.json()) as Product[]
+type Cart = {
+  id: number
+  userId: number
+  date: string
+  products: CartItem[]
+}
 
-console.log(products)
+type User = {
+  id: number
+  username: string
+  email: string
+  name: {
+    firstname: string
+    lastname: string
+  }
+}
+
+const BASE_URL = "https://fakestoreapi.com"
+
+async function fetchJson<T>(url: string): Promise<T> {
+  const response = await fetch(url)
+
+  if (!response.ok) {
+    throw new Error(`Richiesta fallita: ${response.status} ${url}`)
+  }
+
+  return (await response.json()) as T
+}
+
+const [products, carts, users] = await Promise.all([
+  fetchJson<Product[]>(`${BASE_URL}/products`),
+  fetchJson<Cart[]>(`${BASE_URL}/carts`),
+  fetchJson<User[]>(`${BASE_URL}/users`),
+])
+
+console.log("prodotti", products)
+console.log("carrelli", carts)
+console.log("utenti", users)
