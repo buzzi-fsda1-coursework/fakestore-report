@@ -53,3 +53,8 @@ export type CustomerEntry = {
   itemsPurchased: number
   totalSpent: number
 }
+
+export type DateRange = {
+  start: string
+  end: string
+}

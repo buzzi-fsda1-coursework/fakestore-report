@@ -1,4 +1,4 @@
-import type { Cart, CustomerEntry, Product, ProductEntry, User } from "./types.ts"
+import type { Cart, CustomerEntry, DateRange, Product, ProductEntry, User } from "./types.ts"
 
 type ProductSales = {
   product: Product
@@ -12,6 +12,8 @@ type CustomerSpending = {
   totalSpent: number
 }
 
+const DAY_MS = 24 * 60 * 60 * 1000
+
 function round2(value: number): number {
   return Math.round(value * 100) / 100
 }
@@ -24,6 +26,31 @@ export function indexById<T extends { id: number }>(items: T[]): Map<number, T> 
   }
 
   return index
+}
+
+export function getAnchor(carts: Cart[]): number {
+  if (carts.length === 0) {
+    throw new Error("Nessun carrello nei dati: impossibile determinare la data di ancoraggio")
+  }
+
+  return Math.max(...carts.map((cart) => Date.parse(cart.date)))
+}
+
+export function getLastMonthRange(anchor: number): DateRange {
+  return {
+    start: new Date(anchor - 30 * DAY_MS).toISOString(),
+    end: new Date(anchor).toISOString(),
+  }
+}
+
+export function filterByRange(carts: Cart[], range: DateRange): Cart[] {
+  const start = Date.parse(range.start)
+  const end = Date.parse(range.end)
+
+  return carts.filter((cart) => {
+    const time = Date.parse(cart.date)
+    return start <= time && time <= end
+  })
 }
 
 function aggregateProducts(carts: Cart[], productsById: Map<number, Product>): ProductSales[] {
