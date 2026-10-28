@@ -45,5 +45,10 @@ const sales = [...salesById.values()].map(({ product, units }) => ({
   revenue: product.price * units,
 }))
 
-console.table(sales)
+const topProducts = [...sales]
+  .sort((a, b) => b.unitsSold - a.unitsSold || b.revenue - a.revenue || a.id - b.id)
+  .slice(0, 3)
+  .map((sale, index) => ({ rank: index + 1, ...sale }))
+
+console.table(topProducts)
 console.log("utenti", users)
