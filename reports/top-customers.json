@@ -1,0 +1,78 @@
+{
+  "report": "top-customers",
+  "generatedAt": "2026-10-28T10:43:51.369Z",
+  "anchorDate": "2020-03-02T00:00:00.000Z",
+  "allTime": {
+    "range": null,
+    "ranking": [
+      {
+        "rank": 1,
+        "userId": 1,
+        "username": "johnd",
+        "fullName": "john doe",
+        "email": "john@gmail.com",
+        "orderCount": 2,
+        "itemsPurchased": 27,
+        "totalSpent": 3376.74
+      },
+      {
+        "rank": 2,
+        "userId": 4,
+        "username": "donero",
+        "fullName": "don romer",
+        "email": "don@gmail.com",
+        "orderCount": 1,
+        "itemsPurchased": 5,
+        "totalSpent": 560
+      },
+      {
+        "rank": 3,
+        "userId": 3,
+        "username": "kevinryan",
+        "fullName": "kevin ryan",
+        "email": "kevin@gmail.com",
+        "orderCount": 2,
+        "itemsPurchased": 6,
+        "totalSpent": 460.78
+      }
+    ]
+  },
+  "lastMonth": {
+    "range": {
+      "start": "2020-02-01T00:00:00.000Z",
+      "end": "2020-03-02T00:00:00.000Z"
+    },
+    "ranking": [
+      {
+        "rank": 1,
+        "userId": 1,
+        "username": "johnd",
+        "fullName": "john doe",
+        "email": "john@gmail.com",
+        "orderCount": 1,
+        "itemsPurchased": 11,
+        "totalSpent": 798.04
+      },
+      {
+        "rank": 2,
+        "userId": 4,
+        "username": "donero",
+        "fullName": "don romer",
+        "email": "don@gmail.com",
+        "orderCount": 1,
+        "itemsPurchased": 5,
+        "totalSpent": 560
+      },
+      {
+        "rank": 3,
+        "userId": 2,
+        "username": "mor_2314",
+        "fullName": "david morrison",
+        "email": "morrison@gmail.com",
+        "orderCount": 1,
+        "itemsPurchased": 3,
+        "totalSpent": 283.9
+      }
+    ]
+  }
+}

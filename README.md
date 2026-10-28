@@ -2,11 +2,13 @@
 
 Applicazione TypeScript che scarica i dati di [Fake Store API](https://fakestoreapi.com/) e produce due report in JSON: i 3 prodotti più venduti e i 3 clienti con la spesa più alta, sia per tutto lo storico sia per l'ultimo mese.
 
-Costruita con Vite 8.3.5 (template `vanilla-ts`), senza altre dipendenze.
+I report si possono ottenere in due modi: nel browser (pagina e console) oppure come file JSON scritti da uno script Node.
+
+Costruita con Vite 8.3.5 (template `vanilla-ts`). Unica dipendenza aggiunta: `@types/node`, solo per il controllo dei tipi dello script.
 
 ## Requisiti
 
-- Node.js e npm (testato con Node v26.12.0)
+- Node.js con supporto all'esecuzione diretta di TypeScript (22.18 / 23.6 o successivi) e npm. Testato con Node v26.12.0.
 - Connessione a internet, perché i dati vengono letti dall'API a ogni avvio
 
 ## Installazione
@@ -19,11 +21,25 @@ npm install
 
 ## Avvio
 
+### Nel browser
+
 ```bash
 npm run dev
 ```
 
-Aprire nel browser l'URL indicato dal terminale: i due report compaiono nella pagina e nella console del browser (F12). In caso di errore, ad esempio se l'API non risponde, il messaggio viene mostrato nella pagina e in console.
+Apri nel browser l'URL indicato dal terminale (di solito `http://localhost:5173`). I due report compaiono nella pagina e nella console del browser (F12). In caso di errore, ad esempio se l'API non risponde, il messaggio viene mostrato nella pagina e in console.
+
+### Su file
+
+```bash
+npm run report
+```
+
+Scrive i due report in `reports/top-products.json` e `reports/top-customers.json`, sovrascrivendo quelli esistenti. In caso di errore stampa il messaggio nel terminale e termina con codice di uscita 1.
+
+## Report di esempio
+
+La cartella `reports/` contiene i due report generati con `npm run report`, per consultare l'output senza eseguire il programma. Sono un'istantanea: il campo `generatedAt` indica quando sono stati prodotti. Per aggiornarli basta rilanciare il comando.
 
 ## Regole adottate
 
@@ -73,3 +89,4 @@ I due report hanno la stessa struttura. Cambiano l'etichetta (`report`) e gli el
 - `ranking`: fino a 3 elementi.
   - Prodotti: `rank`, `productId`, `title`, `category`, `unitPrice`, `unitsSold`, `revenue`.
   - Clienti: `rank`, `userId`, `username`, `fullName`, `email`, `orderCount`, `itemsPurchased`, `totalSpent`.
+

@@ -1,0 +1,72 @@
+{
+  "report": "top-products",
+  "generatedAt": "2026-10-28T10:43:51.368Z",
+  "anchorDate": "2020-03-02T00:00:00.000Z",
+  "allTime": {
+    "range": null,
+    "ranking": [
+      {
+        "rank": 1,
+        "productId": 1,
+        "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
+        "category": "men's clothing",
+        "unitPrice": 109.95,
+        "unitsSold": 20,
+        "revenue": 2199
+      },
+      {
+        "rank": 2,
+        "productId": 3,
+        "title": "Mens Cotton Jacket",
+        "category": "men's clothing",
+        "unitPrice": 55.99,
+        "unitsSold": 6,
+        "revenue": 335.94
+      },
+      {
+        "rank": 3,
+        "productId": 2,
+        "title": "Mens Casual Premium Slim Fit T-Shirts ",
+        "category": "men's clothing",
+        "unitPrice": 22.3,
+        "unitsSold": 5,
+        "revenue": 111.5
+      }
+    ]
+  },
+  "lastMonth": {
+    "range": {
+      "start": "2020-02-01T00:00:00.000Z",
+      "end": "2020-03-02T00:00:00.000Z"
+    },
+    "ranking": [
+      {
+        "rank": 1,
+        "productId": 1,
+        "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
+        "category": "men's clothing",
+        "unitPrice": 109.95,
+        "unitsSold": 6,
+        "revenue": 659.7
+      },
+      {
+        "rank": 2,
+        "productId": 3,
+        "title": "Mens Cotton Jacket",
+        "category": "men's clothing",
+        "unitPrice": 55.99,
+        "unitsSold": 6,
+        "revenue": 335.94
+      },
+      {
+        "rank": 3,
+        "productId": 12,
+        "title": "WD 4TB Gaming Drive Works with Playstation 4 Portable External Hard Drive",
+        "category": "electronics",
+        "unitPrice": 114,
+        "unitsSold": 3,
+        "revenue": 342
+      }
+    ]
+  }
+}
